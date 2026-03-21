@@ -62,7 +62,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.AdamW(model.fc.parameters(), lr=0.01, weight_decay=1e-4)
 
 # 训练 
-num_epochs = 30
+num_epochs = 10
 best_acc = 0
 for epoch in range(num_epochs):
     model.train()
@@ -95,6 +95,4 @@ for epoch in range(num_epochs):
         best_acc = epoch_acc
         torch.save(model.state_dict(), 'pokemon_model_best.pth')
 
-# 保存最终模型
-torch.save(model.state_dict(), 'pokemon_model_final.pth')
-print("训练完成，模型已保存")
+print("训练完成！")
