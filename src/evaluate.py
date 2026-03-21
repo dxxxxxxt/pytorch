@@ -7,11 +7,11 @@ from torch.utils.data import DataLoader
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 import numpy as np
 
-# ==================== 设备检测 ====================
+# 设备检测 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"使用设备: {device}")
 
-# ==================== 数据预处理 ====================
+# 数据预处理
 test_transform = transforms.Compose([
     transforms.Resize(256),
     transforms.CenterCrop(224),
@@ -19,7 +19,7 @@ test_transform = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-# ==================== 加载测试数据 ====================
+# 加载测试数据 
 test_dataset = torchvision.datasets.ImageFolder(
     root='D:\\pytorch\\test',
     transform=test_transform
@@ -29,7 +29,7 @@ test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 print(f"测试集样本数: {len(test_dataset)}")
 print(f"类别: {test_dataset.classes}")
 
-# ==================== 加载模型 ====================
+# 加载模型 
 # 重新定义模型结构（与训练时完全一致）
 num_classes = len(test_dataset.classes)
 model = models.resnet18(pretrained=False)
@@ -57,7 +57,7 @@ model.eval()
 
 print("模型加载成功！")
 
-# ==================== 推理和评估 ====================
+# 推理和评估 
 all_preds = []
 all_labels = []
 
