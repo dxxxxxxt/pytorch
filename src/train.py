@@ -63,6 +63,7 @@ optimizer = optim.AdamW(model.fc.parameters(), lr=0.01, weight_decay=1e-4)
 
 # 训练 
 num_epochs = 30
+best_acc = 0
 for epoch in range(num_epochs):
     model.train()
     running_loss = 0.0
@@ -90,8 +91,9 @@ for epoch in range(num_epochs):
     writer.add_scalar('Loss/train', epoch_loss, epoch)
     writer.add_scalar('Accuracy/train', epoch_acc, epoch)
 
-    # 每轮保存模型
-    torch.save(model.state_dict(), f'pokemon_model_epoch{epoch+1}.pth')
+    if epoch_acc > best_acc:
+        best_acc = epoch_acc
+        torch.save(model.state_dict(), 'pokemon_model_best.pth')
 
 # 保存最终模型
 torch.save(model.state_dict(), 'pokemon_model_final.pth')

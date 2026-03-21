@@ -48,7 +48,7 @@ model.fc = nn.Sequential(
 )
 
 # 加载训练好的权重
-state_dict = torch.load('pokemon_model_final.pth', map_location=device)
+state_dict = torch.load('pokemon_model_best.pth', map_location=device)
 model.load_state_dict(state_dict)
 
 # 移动到设备并设置为评估模式
