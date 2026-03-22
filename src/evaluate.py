@@ -9,7 +9,6 @@ import numpy as np
 
 # 设备检测 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-print(f"使用设备: {device}")
 
 # 数据预处理
 test_transform = transforms.Compose([
@@ -34,7 +33,7 @@ print(f"类别: {test_dataset.classes}")
 num_classes = len(test_dataset.classes)
 model = models.resnet18(pretrained=False)
 
-# 冻结所有参数（与训练时一致）
+# 冻结所有参数
 for param in model.parameters():
     param.requires_grad = False
 
@@ -55,8 +54,6 @@ model.load_state_dict(state_dict)
 model = model.to(device)
 model.eval()
 
-print("模型加载成功！")
-
 # 推理和评估 
 all_preds = []
 all_labels = []
@@ -72,7 +69,7 @@ with torch.no_grad():
 
 # 计算量化指标
 accuracy = accuracy_score(all_labels, all_preds)
-print(f"\n========== 模型评估结果 ==========")
+print(f"\n模型评估结果")
 print(f"测试集准确率: {accuracy:.4f} ({accuracy*100:.2f}%)")
 
 # 分类报告

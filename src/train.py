@@ -5,7 +5,6 @@ import torchvision
 import torchvision.transforms as transforms
 import torchvision.models as models
 from torch.utils.data import DataLoader
-from torch.utils.tensorboard import SummaryWriter
 
 # 数据增强
 train_transform = transforms.Compose([
@@ -16,25 +15,12 @@ train_transform = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
-test_transform = transforms.Compose([
-    transforms.Resize(256),
-    transforms.CenterCrop(224),
-    transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
-])
-
-writer = SummaryWriter('runs/pokemon_experiment')
-
 train_dataset = torchvision.datasets.ImageFolder(
     root='D:\\pytorch\\train',
     transform=train_transform
 )
-test_dataset = torchvision.datasets.ImageFolder(
-    root='D:\\pytorch\\test',
-    transform=test_transform
-)
+
 train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)
-test_loader = DataLoader(test_dataset, batch_size=32, shuffle=False)
 
 #模型 
 model = models.resnet18(pretrained=True)
@@ -43,8 +29,8 @@ model = models.resnet18(pretrained=True)
 for param in model.parameters():
     param.requires_grad = False
 
-# 修改全连接层（适配宝可梦数据集）
-num_classes = len(train_dataset.classes)  # 自动获取类别数
+# 修改全连接层
+num_classes = len(train_dataset.classes)  
 in_features = model.fc.in_features
 model.fc = nn.Sequential(
     nn.Linear(in_features, 1024),
@@ -88,9 +74,6 @@ for epoch in range(num_epochs):
     epoch_acc = correct / total
     print(f'Epoch [{epoch+1}/{num_epochs}] Loss: {epoch_loss:.4f} Acc: {epoch_acc:.4f}')
     
-    writer.add_scalar('Loss/train', epoch_loss, epoch)
-    writer.add_scalar('Accuracy/train', epoch_acc, epoch)
-
     if epoch_acc > best_acc:
         best_acc = epoch_acc
         torch.save(model.state_dict(), 'pokemon_model_best.pth')
